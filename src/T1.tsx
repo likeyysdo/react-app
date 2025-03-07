@@ -18,7 +18,7 @@ interface DataRow {
 const data: DataRow[] = Array.from({ length: 2 }, (_, index) => {
   const baseData = [
     { id: 1, name: "Oli Bob", age: "12", color: "red", rating: 5 },
-    { id: 2, name: "Mary May", age: "21", color: "blue", rating: 4 },
+    { id: 2, name: "Mary May", age: "27", color: "blue", rating: 4 },
     { id: 3, name: "John Doe", age: "35", color: "green", rating: 3 }
   ];
   const baseIndex = index % 3;
