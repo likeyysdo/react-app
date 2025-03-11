@@ -49,7 +49,7 @@ class T1 extends React.Component {
 
   state = {
     rangeBottom: 0,
-    text:"123"
+    text:"123",
   };
 
   componentDidMount() {
@@ -98,14 +98,16 @@ class T1 extends React.Component {
         // virtualDom: true,       // 启用虚拟DOM
         // virtualDomBuffer: 300,  // 虚拟DOM缓冲区大小
       });
-      this.table?.on("rangeChanged", (range: any) => {
-        //log range
-        console.log("rangeChanged", range);
-        // 使用 setState 更新值，这会触发重新渲染
-        this.setState({
-          rangeBottom: range.getBottomEdge()
-        });
-      });
+      // this.table?.on("rangeChanged", (range: any) => {
+      //   //log range
+      //   console.log("rangeChanged", range);
+      //   //log table getRanges
+      //   console.log("table getRanges", this.table?.getRanges());
+      //   // 使用 setState 更新值，这会触发重新渲染
+      //   this.setState({
+      //     rangeBottom: range.getBottomEdge()
+      //   });
+      // });
     }
   }
 
@@ -121,28 +123,15 @@ class T1 extends React.Component {
     //log 
     console.log("addEmptyRow");
     //log rangeBottom
-    console.log("rangeBottom", this.state.rangeBottom);
-    this.setState({
-      text: `在第 ${this.state.rangeBottom+1} 行后插入新行`
-    });
-    this.table?.addRow({}, false, (this.state.rangeBottom || 0));
+    //console.log("rangeBottom", this.table?.getRanges());
+    this.table.addRow({}, false, this.table.getRanges()[0].getBounds().end.row);
   };
 
   // 删除选中行
   deleteSelectedRows = () => {
     //log 
     console.log("deleteSelectedRows");
-    const ranges = this.table?.getRanges();
-    if (ranges && ranges.length > 0) {
-      // 获取所有范围中的行
-      const rowsToDelete = ranges.flatMap(range => 
-        range.getRows().map(row => row.getData())
-      );
-      // 删除每一行
-      rowsToDelete.forEach(row => {
-        this.table?.deleteRow(row);
-      });
-    }
+    this.table.deleteRow(this.table.getRanges()[0].getRows());
   };
 
   render() {
@@ -156,8 +145,13 @@ class T1 extends React.Component {
             <button onClick={() => this.table?.clearData()}>
               清空表格数据
             </button>
-            <button onClick={() => console.log("table entity:", this.table)}>
-              查看表格实例
+            <button onClick={() => {
+              console.log("table:", this.table)
+              //log table getRanges
+              console.log("table getRanges", this.table?.getRanges());
+              console.log("table getRanges[0]", this.table?.getRanges()[0]);
+            }}>
+              查看表格实例:
             </button>
             <button onClick={this.addEmptyRow}>
               在选中行下方添加空行
