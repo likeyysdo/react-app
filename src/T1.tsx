@@ -15,7 +15,7 @@ interface DataRow {
 }
 
 // 示例数据
-const data: DataRow[] = Array.from({ length: 2 }, (_, index) => {
+const data: DataRow[] = Array.from({ length: 20 }, (_, index) => {
   const baseData = [
     { id: 1, name: "Oli Bob", age: "12", color: "red", rating: 5 },
     { id: 2, name: "Mary May", age: "21", color: "blue", rating: 4 },
@@ -47,20 +47,27 @@ class T1 extends React.Component {
 
   private table: Tabulator | null = null;
 
+  state = {
+    rangeBottom: 0,
+    text:"123"
+  };
+
   componentDidMount() {
     if (this.el.current) {
       this.table = new Tabulator(this.el.current, {
         //enable range selection
         debugEventsExternal:true, 
-        height: "811px",
+        height: "511px",
         responsiveLayout: "hide",
         resizableRowGuide: true,
         resizableColumnGuide: true,
         selectableRange: true,
+
         selectableRangeColumns: true,
         selectableRangeRows: true,
         selectableRangeClearCells: true,
         selectableRangeAutoFocus:false,
+ 
         //change edit trigger mode to make cell navigation smoother
         editTriggerEvent: "click",
 
@@ -88,25 +95,37 @@ class T1 extends React.Component {
         data: data,
         reactiveData: true,
         columns: columns as ColumnDefinition[],
+        // virtualDom: true,       // 启用虚拟DOM
+        // virtualDomBuffer: 300,  // 虚拟DOM缓冲区大小
+      });
+      this.table?.on("rangeChanged", (range: any) => {
+        //log range
+        console.log("rangeChanged", range);
+        // 使用 setState 更新值，这会触发重新渲染
+        this.setState({
+          rangeBottom: range.getBottomEdge()
+        });
       });
     }
   }
+
+  componentWillUnmount(): void {
+    if (this.table) {
+      this.table.destroy();
+    }
+  }
+
 
   // 添加空行
   addEmptyRow = () => {
     //log 
     console.log("addEmptyRow");
-    const ranges = this.table?.getRanges();
-    if (ranges && ranges.length > 0) {
-      // 获取最后一个范围
-      const lastRange = ranges[ranges.length - 1];
-      // 获取该范围内的所有行
-      const rows = lastRange.getRows();
-      // 获取最后一行
-      const lastRow = rows[rows.length - 1];
-      // 在该行下方插入空行
-      this.table?.addRow({}, lastRow.getPosition() + 1);
-    }
+    //log rangeBottom
+    console.log("rangeBottom", this.state.rangeBottom);
+    this.setState({
+      text: `在第 ${this.state.rangeBottom+1} 行后插入新行`
+    });
+    this.table?.addRow({}, false, (this.state.rangeBottom || 0));
   };
 
   // 删除选中行
@@ -130,12 +149,26 @@ class T1 extends React.Component {
     return (
       <div>
         <div style={{ marginBottom: '10px' }}>
-          <button onClick={this.addEmptyRow} style={{ marginRight: '10px' }}>
-            在选中行下方添加空行
-          </button>
-          <button onClick={this.deleteSelectedRows}>
-            删除选中行
-          </button>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+            <button onClick={() => console.log("text:", this.state.text)}>
+            text: {this.state.text}
+            </button>
+            <button onClick={() => this.table?.clearData()}>
+              清空表格数据
+            </button>
+            <button onClick={() => console.log("table entity:", this.table)}>
+              查看表格实例
+            </button>
+            <button onClick={this.addEmptyRow}>
+              在选中行下方添加空行
+            </button>
+            <button onClick={this.deleteSelectedRows}>
+              删除选中行
+            </button>
+            <span style={{ marginLeft: '10px' }}>
+              选中了最后行号: {this.state.rangeBottom+1}
+            </span>
+          </div>
         </div>
         <div ref={this.el} />
       </div>
