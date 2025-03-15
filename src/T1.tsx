@@ -98,16 +98,6 @@ class T1 extends React.Component {
         // virtualDom: true,       // 启用虚拟DOM
         // virtualDomBuffer: 300,  // 虚拟DOM缓冲区大小
       });
-      // this.table?.on("rangeChanged", (range: any) => {
-      //   //log range
-      //   console.log("rangeChanged", range);
-      //   //log table getRanges
-      //   console.log("table getRanges", this.table?.getRanges());
-      //   // 使用 setState 更新值，这会触发重新渲染
-      //   this.setState({
-      //     rangeBottom: range.getBottomEdge()
-      //   });
-      // });
     }
   }
 
