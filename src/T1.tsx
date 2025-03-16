@@ -48,8 +48,7 @@ class T1 extends React.Component {
   private table: Tabulator | null = null;
 
   state = {
-    rangeBottom: 0,
-    text:"123",
+
   };
 
   componentDidMount() {
@@ -82,7 +81,7 @@ class T1 extends React.Component {
         clipboardPasteParser: "range",
         clipboardPasteAction: "range",
 
-        rowHeader: { resizable: false, frozen: true, width: 40, hozAlign: "center", formatter: "rownum", cssClass: "range-header-col", editor: false },
+        rowHeader: { resizable: false, frozen: true,  hozAlign: "center", formatter: "rownum", cssClass: "range-header-col", editor: false },
 
         //setup cells to work as a spreadsheet
         columnDefaults: {
@@ -124,15 +123,19 @@ class T1 extends React.Component {
     this.table.deleteRow(this.table.getRanges()[0].getRows());
   };
 
+  // clear table data
+  clearTableData = () => {
+    this.table?.clearData();
+  };
+
+
   render() {
     return (
       <div>
         <div style={{ marginBottom: '10px' }}>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-            <button onClick={() => console.log("text:", this.state.text)}>
-            text: {this.state.text}
-            </button>
-            <button onClick={() => this.table?.clearData()}>
+
+            <button onClick={this.clearTableData}>
               清空表格数据
             </button>
             <button onClick={() => {
@@ -149,9 +152,6 @@ class T1 extends React.Component {
             <button onClick={this.deleteSelectedRows}>
               删除选中行
             </button>
-            <span style={{ marginLeft: '10px' }}>
-              选中了最后行号: {this.state.rangeBottom+1}
-            </span>
           </div>
         </div>
         <div ref={this.el} />
