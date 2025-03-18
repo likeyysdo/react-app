@@ -1,7 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import { ColumnDefinition } from "react-tabulator";
-import { ReactTabulator } from 'react-tabulator'
 import { TabulatorFull as Tabulator } from "tabulator-tables"; //import Tabulator library
 import "tabulator-tables/dist/css/tabulator.min.css"; //import Tabulator stylesheet
 import { VariableDataType } from "./SidebarEnum";
